@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import SubmissionCard from './SubmittedCard';
 
 // UPDATE scene2videoAPIurl as NEEDED:
-const scene2videoAPIurl = "api/main/convert"
+const scene2videoAPIurl = "http://localhost:8000/convert"
+const uploadimageAPIurl = "http://localhost:8000/uploadimage"
 
 const VideoConverter = () => {
-  const [imageURLs, setImageUrls] = useState([]);
+  const [imageURLs, setImageURLs] = useState([]);
   const [voiceoverTexts, setVoiceoverTexts] = useState([]);
   const [transitionArray, setTransitionArray] = useState([]);
   const [currentImage, setCurrentImage] = useState("");
@@ -20,7 +21,7 @@ const VideoConverter = () => {
       alert("Please input all data before submitting");
       return;
     }
-    setImageUrls((prevImageUrls) => [...prevImageUrls, currentImage]);
+    setImageURLs((prevImageUrls) => [...prevImageUrls, currentImage]);
     setVoiceoverTexts((prevVoiceoverTexts) => [...prevVoiceoverTexts, currentText]);
     setTransitionArray((prevTransitionArray) => [...prevTransitionArray, currentTransition]);
     setCurrentImage("")
@@ -38,8 +39,23 @@ const VideoConverter = () => {
         setCurrentImage(blobUrl);
       };
       reader.readAsDataURL(file);
-    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+    fetch(uploadimageAPIurl, {
+      method: "POST",
+      body: formData
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data); // Process the response data as needed
+        setCurrentImage(data.fileURL)
+      })
+      .catch((error) => {
+        console.error("Error uploading file:", error);
+      });
   }
+}
 
   const downloadVideoFromBlob = (videoURL) => {
     const downloadLink = document.createElement('a');
