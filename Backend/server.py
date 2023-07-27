@@ -16,10 +16,11 @@ from typing import List
 import uuid
 import logging
 
+#UPDATE AS NEEDED
+deployed_url = "http://localhost:8000"
+
 # logger=logging.getLogger(__file__)
 # logging.config.fileConfig("./app/logging.conf", disable_existing_loggers=False)
-
-deployed_url = "http://localhost:8000"
 app = FastAPI()
 if not os.path.exists("./localimages"):
             os.mkdir("./localimages")
