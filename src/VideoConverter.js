@@ -158,13 +158,6 @@ const VideoConverter = () => {
         >
           Add scene
         </button>
-        {imageURLs.length > 0 && (
-          <SubmissionCard
-            imageURLs={imageURLs}
-            voiceoverTexts={voiceoverTexts}
-            transitionArray={transitionArray}
-          />
-        )}
         <div className="flex flex-wrap mb-4">
           <input
             type="text"
@@ -186,23 +179,31 @@ const VideoConverter = () => {
             type="button"
             onClick={() => downloadVideoFromBlob(convertedVideoURL)}
             className="w-3/5 bg-green-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-gray-300 disabled:cursor-not-allowed"
-            disabled={convertedVideoURL === ""}
+            disabled={convertedVideoURL === "" || loading}
           >
             Download Video
           </button>}
 
         </div>
-        {loading && <h1 className="text-4xl font-bold pt-5">Loading...</h1>}
+        {loading && <h1 className="text-4xl font-bold pt-5">Video is generating...</h1>}
+        {imageURLs.length > 0 && (
+          <SubmissionCard
+            imageURLs={imageURLs}
+            voiceoverTexts={voiceoverTexts}
+            transitionArray={transitionArray}
+          />
+        )}
+      </div>
       </div>
       {convertedVideoURL && (
-        <div className="mt-6 flex items-center justify-center sticky position:fixed">
+        <div className="p-10 align-top">
+          <h1 className='font-thin font-serif p-5'>Video Preview:</h1>
           <video width="640" height="360" controls key={convertedVideoURL}>
             <source src={convertedVideoURL} type="video/mp4" />
             Your browser does not support the video tag.
           </video>
         </div>
       )}
-      </div>
     </div>
   );
 };

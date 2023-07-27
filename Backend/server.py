@@ -14,7 +14,12 @@ from starlette.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 import uuid
+import logging
 
+# logger=logging.getLogger(__file__)
+# logging.config.fileConfig("./app/logging.conf", disable_existing_loggers=False)
+
+deployed_url = "http://localhost:8000"
 app = FastAPI()
 if not os.path.exists("./localimages"):
             os.mkdir("./localimages")
@@ -23,7 +28,7 @@ app.mount("/localimages", StaticFiles(directory=localimages_path), name="localim
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"], 
+    allow_origins=["http://localhost:3000", "https://text2video-fc6v.vercel.app"], 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -41,6 +46,7 @@ async def convert_videos(item: Item):
         if os.path.exists("./temp"):
             shutil.rmtree("./temp")
         os.mkdir("./temp")
+        # logger.info("Created temp")
     except Exception as e:
         raise HTTPException(status_code=500, detail={"error": str(e)})
     
@@ -149,14 +155,15 @@ def concat_videos_with_transition_array(segments: List[str], output_filename: st
     subprocess.run(ffmpeg_args)
 
 def download_file(url, output_path):
-    if (url[:4]=='http'):
+    if (url.startswith(deployed_url)):
+        filename = os.path.basename(url)
+        shutil.copy("localimages/"+filename , output_path)
+    else:
         response = requests.get(url, stream=True)
         response.raise_for_status()
         with open(output_path, 'wb') as file:
             for chunk in response.iter_content(chunk_size=8192):
                 file.write(chunk)
-    else:
-        shutil.copy(url , output_path)
             
 def create_voiceover(text, output_path):
     tts = gTTS(text=text, lang='en')
