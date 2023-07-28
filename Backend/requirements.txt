@@ -2,7 +2,7 @@ requests
 fastapi
 uvicorn
 pydantic
-gtts
 starlette
 ffmpeg-python
 python-multipart
+TTS

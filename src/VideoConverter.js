@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import SubmissionCard from './SubmittedCard';
 
 // UPDATE scene2videoAPIurl as NEEDED:
-const scene2videoAPIurl = "http://localhost:8000/convert"
-const uploadimageAPIurl = "http://localhost:8000/uploadimage"
+const scene2videoAPIurl = "http://0.0.0.0:8000/convert"
+const uploadimageAPIurl = "http://0.0.0.0:8000/uploadimage"
 
 const VideoConverter = () => {
   const [imageURLs, setImageURLs] = useState([]);
-  const [voiceoverTexts, setVoiceoverTexts] = useState([]);
+  const [voiceoverTexts, setVoiceoverTexts] = useState([]);d
   const [transitionArray, setTransitionArray] = useState([]);
   const [currentImage, setCurrentImage] = useState("");
   const [currentText, setCurrentText] = useState("");
